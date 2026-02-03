@@ -1,0 +1,33 @@
+*.lib
+*.png
+*.jpg
+*.gif
+*.psd
+*.ai
+*.mp3
+*.wav
+*.ogg
+*.aif
+*.aiff
+*.it
+*.mp4
+*.mov
+*.mod
+*.s3m
+*.xm
+*.dll
+*.tga
+*.zip
+*.ttf
+*.pict
+*.tif
+*.tiff
+*.jpeg
+*.otf
+*.ttf
+""Dependencias/SFML"[[:space:]]filter=lfs[[:space:]]diff=lfs[[:space:]]merge=lfs[[:space:]]-text" filter=lfs diff=lfs merge=lfs -text
+""RPG_game/Assets"[[:space:]]filter=lfs[[:space:]]diff=lfs[[:space:]]merge=lfs[[:space:]]-text" filter=lfs diff=lfs merge=lfs -text
+"Dependencias/SFML/lib/sfml-audio-s-d.pdb" filter=lfs diff=lfs merge=lfs -text
+"*.lib" filter=lfs diff=lfs merge=lfs -text
+"Dependencias/SFML/**" filter=lfs diff=lfs merge=lfs -text
+"*.png" filter=lfs diff=lfs merge=lfs -text
