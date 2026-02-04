@@ -98,7 +98,19 @@
                     Click="AddExpenseButton_Click"
                     Content="Add an Expense"
                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>
+
+                <ListView
+                    x:Name="ExpensesListView"
+                    Grid.Column="1">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" />
+                            <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding Amount}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </StackPanel>
+
 
 
             <StackPanel
@@ -159,6 +171,7 @@
                 <Button
                     Name="CreateExpenseButton"
                     Margin="3"
+                    Click="CreateExpenseButton_Click"
                     mah:ControlsHelper.ContentCharacterCasing="Normal"
                     Content="Create Expense"
                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>

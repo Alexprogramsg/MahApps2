@@ -14,7 +14,7 @@ namespace MahApps2.Data
         {
             using (var db = new BudgetContext())
             {
-                //db.Database.Migrate();
+                db.Database.Migrate();
                 db.Add(budget);
                 db.SaveChanges();
             }
@@ -36,6 +36,24 @@ namespace MahApps2.Data
                 budget.StartDate = startDate;
                 budget.EndDate = endDate;
                 budget.BudgetAmount = double.Parse(budgetAmount);
+                db.SaveChanges();
+            }
+        }
+
+        public static List<Expense> GetExpenses(int budgetId)
+        {
+            using (var db = new BudgetContext())
+            {
+                return db.expenses.Where(x => x.BudgetId == budgetId).OrderBy(x => x.Id).ToList();
+            }
+        }
+
+        public static void AddExpenseToDb(Expense expense)
+        {
+            using (var db = new BudgetContext())
+            {
+                db.Database.Migrate();
+                db.Add(expense);
                 db.SaveChanges();
             }
         }

@@ -147,8 +147,10 @@ namespace MahApps2
             RemainingBudgetTextBlock.Text = RemainingBalance;
 
             AddExpenseButton.Visibility = Visibility.Visible;
-        }
 
+            ExpensesListView.ItemsSource = BudgetData.GetExpenses(selectedItem.Id);
+        }
+        
         private void EditBudgetButton_Click(object sender, RoutedEventArgs e)
         {
             Button b = sender as Button;
@@ -181,7 +183,27 @@ namespace MahApps2
 
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
+            ExpenseStackPanel.Visibility = Visibility.Visible;
+        }
+        private void CreateExpenseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string errors = BudgetValidation.ValidateExpense(ExpenseTitleTextBox.Text, ExpenseAmountTextBox.Text);
 
+            if (errors == "")
+            {
+                Expense expense = new Expense
+                {
+                    BudgetId = selectedItem.Id,
+                    Title = ExpenseTitleTextBox.Text,
+                    Amount = double.Parse(ExpenseAmountTextBox.Text)
+                };
+
+                BudgetData.AddExpenseToDb(expense);
+                ShowSuccess("Successfully Added Expense");
+                ExpensesListView.ItemsSource = BudgetData.GetExpenses(selectedItem.Id);
+            }
+            else
+            { MessageBox.Show(errors); }
         }
     }
 }
