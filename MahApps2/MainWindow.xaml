@@ -93,7 +93,7 @@
                 <Button
                     x:Name="AddExpenseButton"
                     Margin="50, 0"
-                    Visibility="Hidden"
+                    Visibility="Visible"
                     mah:ControlsHelper.ContentCharacterCasing="Normal"
                     Click="AddExpenseButton_Click"
                     Content="Add an Expense"
@@ -175,6 +175,18 @@
                     mah:ControlsHelper.ContentCharacterCasing="Normal"
                     Content="Create Expense"
                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>
+
+                <Button
+                    x:Name="CancelUpdateExpenseButton"
+                    mah:ControlsHelper.ContentCharacterCasing="Normal"
+                    Click="CancelUpdateExpenseButton_Click"
+                    Content="Cancel Expense"
+                    Background="Red"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Margin="3"
+                    Style="{StaticResource MahApps.Styles.Button.Square}"/>
+                
             </StackPanel>
         
         </Grid>

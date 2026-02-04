@@ -35,6 +35,8 @@ namespace MahApps2
             budgets = new ObservableCollection<Budget>(BudgetData.GetBudgets());
 
             BudgetListView.ItemsSource = budgets;
+
+            AddExpenseButton.Visibility = Visibility.Hidden;
         }
 
         private void NewBudgetButton_Click(object sender, RoutedEventArgs e)
@@ -204,6 +206,11 @@ namespace MahApps2
             }
             else
             { MessageBox.Show(errors); }
+        }
+
+        private void CancelUpdateExpenseButton_Click(object sender, RoutedEventArgs e)
+        {
+            ExpenseStackPanel.Visibility = Visibility.Collapsed;
         }
     }
 }
