@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps2.Controller;
+using MahApps2.Data;
 using MahApps2.Models;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -22,14 +23,18 @@ namespace MahApps2
     {
         public string RemainingBalance { get; set; }
         public ObservableCollection<Budget> budgets;
+        private Budget selectedItem;
+        private int budgetId;
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            double balance = 1600;
-            RemainingBalance = $"{balance}€";
+            //double balance = 1600;
+            //RemainingBalance = $"{balance}€";
 
-            budgets = new ObservableCollection<Budget>();
+            budgets = new ObservableCollection<Budget>(BudgetData.GetBudgets());
+
+            BudgetListView.ItemsSource = budgets;
         }
 
         private void NewBudgetButton_Click(object sender, RoutedEventArgs e)
@@ -37,6 +42,12 @@ namespace MahApps2
             if (BudgetStackPanel.Visibility == Visibility.Collapsed)
             {
                 BudgetStackPanel.Visibility = Visibility.Visible;
+                AddButtonFontIcon.Glyph = "\uE738";
+            }
+            else
+            {
+                BudgetStackPanel.Visibility = Visibility.Collapsed;
+                AddButtonFontIcon.Glyph = "\uE710";
             }
         }
 
@@ -52,24 +63,49 @@ namespace MahApps2
                 return;
             }
 
-            Budget budget = new Budget
+            if (CreateBudgetButtom.Content.ToString() == "Create Budget")
             {
-                StartDate = (DateTime)StartDatePicker.SelectedDate,
-                EndDate = (DateTime)EndDatePicker.SelectedDate,
-                BudgetAmount = double.Parse(TotalBudgetTextBox.Text)
-            };
+                Budget budget = new Budget
+                {
+                    StartDate = (DateTime)StartDatePicker.SelectedDate,
+                    EndDate = (DateTime)EndDatePicker.SelectedDate,
+                    BudgetAmount = double.Parse(TotalBudgetTextBox.Text)
+                };
 
-            budgets.Add(budget);
+                budgets.Add(budget);
 
-            BudgetListView.ItemsSource = budgets;
+                BudgetListView.ItemsSource = budgets;
 
-            //UpdateFlyout.CloseButtonVisibility = Visibility.Hidden;
+                BudgetData.AddBudgetToDb(budget);
 
-            //BudgetStackPanel.Visibility = Visibility.Collapsed;
+                //UpdateFlyout.CloseButtonVisibility = Visibility.Hidden;
 
-            //UpdateFlyout.IsOpen = true;
+                //BudgetStackPanel.Visibility = Visibility.Collapsed;
 
-            ShowSuccess();
+                //UpdateFlyout.IsOpen = true;
+
+                ShowSuccess("Successfully Added Budget");
+            }
+            else
+            {
+                if (CreateBudgetButtom.Content.ToString() == "Update Budget")
+                {
+                    BudgetData.UpdateBudgetDb(budgetId,
+                        (DateTime)StartDatePicker.SelectedDate,
+                        (DateTime)EndDatePicker.SelectedDate,
+                        TotalBudgetTextBox.Text
+                    );
+
+                    StartDatePicker.SelectedDate = null;
+                    EndDatePicker.SelectedDate = null;
+                    TotalBudgetTextBox.Text = null;
+
+                    BudgetStackPanel.Visibility = Visibility.Collapsed;
+                    AddButtonFontIcon.Glyph = "\uE710";
+                    CancelUpdateButton.Visibility = Visibility.Hidden;
+                    ShowSuccess("Successfully Updated Budget");
+                }
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -89,11 +125,11 @@ namespace MahApps2
 
             UpdateFlyout.IsOpen = true;
         }
-        private void ShowSuccess()
+        private void ShowSuccess(String text)
         {
             UpdateFlyout.Background = Brushes.Green;
 
-            FlyoutTextBlock.Text = "Successfully Added Budget";
+            FlyoutTextBlock.Text = text;
 
             UpdateFlyout.CloseButtonVisibility = Visibility.Hidden;
 
@@ -102,6 +138,50 @@ namespace MahApps2
             UpdateFlyout.IsOpen = true;
         }
 
+        private void BudgetListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedItem = (Budget)BudgetListView.SelectedItem;
 
+            RemainingBalance = $"{selectedItem.BudgetAmount}€";
+
+            RemainingBudgetTextBlock.Text = RemainingBalance;
+
+            AddExpenseButton.Visibility = Visibility.Visible;
+        }
+
+        private void EditBudgetButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = sender as Button;
+
+            Budget budget = b.CommandParameter as Budget;
+
+            StartDatePicker.SelectedDate = budget.StartDate;
+            EndDatePicker.SelectedDate = budget.EndDate;
+            TotalBudgetTextBox.Text = budget.BudgetAmount.ToString();
+
+            BudgetStackPanel.Visibility = Visibility.Visible;
+            AddButtonFontIcon.Glyph = "\uE738";
+            CancelUpdateButton.Visibility = Visibility.Visible;
+
+            CreateBudgetButtom.Content = "Update Budget";
+
+            budgetId = budget.Id;
+        }
+
+        private void CancelUpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            StartDatePicker.SelectedDate = null;
+            EndDatePicker.SelectedDate = null;
+            TotalBudgetTextBox.Text = null;
+
+            BudgetStackPanel.Visibility = Visibility.Collapsed;
+            AddButtonFontIcon.Glyph = "\uE710";
+            CancelUpdateButton.Visibility = Visibility.Hidden;
+        }
+
+        private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -11,7 +11,7 @@
         ResizeMode="CanResizeWithGrip"
         BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
         BorderThickness="5"
-        Title="MyBudget" Height="450" Width="800">
+        Title="MyBudget" Height="575" Width="1100">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80" />
@@ -44,30 +44,61 @@
                 Style="{StaticResource MahApps.Styles.Button.Circle}"
                 Background="{StaticResource MahApps.Brushes.Accent}"
                 Click="NewBudgetButton_Click">
-                <mah:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Foreground="White" />
+                <mah:FontIcon 
+                    x:Name="AddButtonFontIcon"
+                    FontFamily="Segoe MDL2 Assets" 
+                    Glyph="&#xE710;" 
+                    Foreground="White" />
             </Button>
 
         </Grid>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="180.667" />
-                <ColumnDefinition Width="13.333" />
+                <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
 
             <ListView Grid.Column="0"
                       BorderThickness="1"
-                      x:Name="BudgetListView">
+                      x:Name="BudgetListView"
+                      SelectionChanged="BudgetListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding StartDate}"/>
                         <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding EndDate}"/>
                         <GridViewColumn Header="Budget Amount" DisplayMemberBinding="{Binding BudgetAmount}"/>
+                        <GridViewColumn Width="50" Header="Edit">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="EditBudgetButton" 
+                                            CommandParameter="{Binding}"
+                                            Click="EditBudgetButton_Click">
+                                        <mah:FontIcon
+                                            x:Name="AddButtonFontIcon"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            Foreground="{StaticResource MahApps.Brushes.Accent}"
+                                            Glyph="&#xE70F;"/>
+                                    </Button>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
+
+            <StackPanel Grid.Column="1">
+                <Button
+                    x:Name="AddExpenseButton"
+                    Margin="50, 0"
+                    Visibility="Hidden"
+                    mah:ControlsHelper.ContentCharacterCasing="Normal"
+                    Click="AddExpenseButton_Click"
+                    Content="Add an Expense"
+                    Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>
+            </StackPanel>
 
 
             <StackPanel
@@ -97,9 +128,44 @@
                         Style="{StaticResource MahApps.Styles.Button.Square.Accent}" 
                         Click="CreateBudgetButtom_Click"
                         />
-
+                <Button x:Name="CancelUpdateButton" 
+                        Content="Cancel Edit"
+                        mah:ControlsHelper.ContentCharacterCasing="Normal"
+                        Style="{StaticResource MahApps.Styles.Button.Square}" 
+                        Click="CancelUpdateButton_Click"
+                        Background="Red"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Margin="0,5,0,0"
+                        Visibility="Hidden"/>
             </StackPanel>
+
+            <StackPanel
+                x:Name="ExpenseStackPanel"
+                Grid.Column="2"
+                Orientation="Vertical"
+                Visibility="Hidden">
+                <TextBox
+                    x:Name="ExpenseTitleTextBox"
+                    Margin="3"
+                    mah:TextBoxHelper.UseFloatingWatermark="True"
+                    mah:TextBoxHelper.Watermark="Expense Title"/>
+                <TextBox
+                    x:Name="ExpenseAmountTextBox"
+                    Margin="3"
+                    mah:TextBoxHelper.UseFloatingWatermark="True"
+                    mah:TextBoxHelper.Watermark="Expense Amount"/>
+
+                <Button
+                    Name="CreateExpenseButton"
+                    Margin="3"
+                    mah:ControlsHelper.ContentCharacterCasing="Normal"
+                    Content="Create Expense"
+                    Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>
+            </StackPanel>
+        
         </Grid>
+        
 
 
         <mah:FlyoutsControl>
@@ -127,7 +193,7 @@
         <StatusBar Grid.Row="2">
             <StatusBarItem FontSize="16">Remaining  Monthly Budget</StatusBarItem>
             <StatusBarItem>
-                <TextBlock FontSize="16" Text="{Binding RemainingBalance}"></TextBlock>
+                <TextBlock x:Name="RemainingBudgetTextBlock" FontSize="16" Text="{Binding RemainingBalance}"></TextBlock>
             </StatusBarItem>
         </StatusBar>
     </Grid>

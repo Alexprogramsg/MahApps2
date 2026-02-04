@@ -10,6 +10,13 @@
 
   <ItemGroup>
     <None Remove="Assets\Images\cash.ico" />
+    <None Remove="Data\budget.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\budget.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -19,10 +26,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 
   <ItemGroup>
